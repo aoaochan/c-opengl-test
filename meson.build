@@ -11,6 +11,7 @@ exe = executable(
   [
     'src/main.c',
     'src/glad/glad.c',
+    'src/shader.c',
   ],
   include_directories: include_directories('includes'),
   dependencies: [
@@ -20,3 +21,11 @@ exe = executable(
 )
 
 test('basic', exe)
+
+configure_file(
+  input: 'lib/glfw3.dll',
+  output: 'glfw3.dll',
+  copy: true
+)
+
+subdir('shaders')

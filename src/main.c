@@ -1,10 +1,10 @@
-#include <math.h>
 #include <stdio.h>
-
+#include <stdbool.h>
+#include <math.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "shader.c"
+#include "shader.h"
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -31,8 +31,8 @@ int main(void) {
     return -1;
   }
 
-  size_t shaderProgram;
-  buildShaderProgram(&shaderProgram);
+  Shader ourShader;
+  shaderInit(&ourShader, "shaders/vertShader.glsl", "shaders/fragShader.glsl");
 
   float vertices[] = {
      0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
@@ -54,7 +54,7 @@ int main(void) {
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
 
-  glUseProgram(shaderProgram);
+  shaderUse(&ourShader);
 
   while (!glfwWindowShouldClose(window)) {
     processInput(window);
@@ -70,17 +70,18 @@ int main(void) {
   }
 
   glDeleteVertexArrays(1, &VAO);
-  glDeleteBuffers(1, &VAO);
-  glDeleteProgram(shaderProgram);
+  glDeleteBuffers(1, &VBO);
+  glDeleteProgram(ourShader.ID);
 
   glfwTerminate();
 
   return 0;
 }
 
-void framebufferSizeCallback(GLFWwindow *_, int width, int height) {
+void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
+  (void)window;
   glViewport(0, 0, width, height);
 }
 void processInput(GLFWwindow *window) {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, 1);
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 }
