@@ -29,3 +29,4 @@ configure_file(
 )
 
 subdir('shaders')
+subdir('textures')
